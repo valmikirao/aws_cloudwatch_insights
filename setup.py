@@ -21,7 +21,7 @@ requirements = [
 
 setup_requirements = ['pytest-runner', ]
 
-test_requirements = ['pytest>=3', ]
+test_requirements = ['pytest>=7.2.1,<8.0.0', ]
 
 setup(
     author="Valmiki Rao",
