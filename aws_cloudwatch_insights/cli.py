@@ -186,7 +186,7 @@ def _run_acwi(query: str, silent: bool, result_limit: int, out_file: Optional[st
         results = Insights(logs_client).get_insights(
             query=query,
             result_limit=result_limit,
-            lambda_group_names=lambda_group_names,
+            group_names=lambda_group_names,
             start_time=start_time,
             end_time=end_time,
             jsonify=jsonify,

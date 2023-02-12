@@ -1,4 +1,4 @@
-.PHONY: clean clean-test clean-pyc clean-build docs help
+.PHONY: clean clean-test clean-pyc clean-build docs help develop test test-all
 .DEFAULT_GOAL := help
 
 define BROWSER_PYSCRIPT
@@ -25,6 +25,7 @@ BROWSER := python -c "$$BROWSER_PYSCRIPT"
 
 help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
+	@echo $(MAKECMDGOALS)
 
 clean: clean-build clean-pyc clean-test ## remove all build, test, coverage and Python artifacts
 
@@ -54,7 +55,10 @@ test: ## run tests quickly with the default Python
 	pytest
 
 test-all: ## run tests on every Python version with tox
-	tox
+	./scripts/run_tests_all.sh
+
+test-all-build:
+	./scripts/run_tests_all.sh --build
 
 coverage: ## check code coverage quickly with the default Python
 	coverage run --source aws_cloudwatch_insights -m pytest
@@ -83,3 +87,6 @@ dist: clean ## builds source and wheel package
 
 install: clean ## install the package to the active Python's site-packages
 	python setup.py install
+
+develop: clean
+	python setup.py develop

@@ -1,0 +1,42 @@
+version: '3'
+services:
+  py36:
+    volumes: &volumes
+        -   .:/app
+    build: &build
+        dockerfile: Dockerfile.test
+        context: .
+        args:
+            PY_VERSION: 3.6
+  py37:
+    volumes: *volumes
+    build:
+        <<: *build
+        args:
+            PY_VERSION: 3.7
+  py38:
+    volumes: *volumes
+    build:
+        <<: *build
+        args:
+            PY_VERSION: 3.8
+  py39:
+    volumes: *volumes
+    build:
+        <<: *build
+        args:
+            PY_VERSION: 3.9
+  py310:
+    volumes: *volumes
+    build:
+        <<: *build
+        args:
+            PY_VERSION: "3.10"
+#  service2:
+#    image: service2:latest
+#    restart:
+#      on-failure:
+#        max_failure_retries: 3
+#        failure_retry_interval: 30s
+#  service3:
+#    image: service

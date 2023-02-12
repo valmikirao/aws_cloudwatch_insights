@@ -1,0 +1,23 @@
+
+ARG PY_VERSION
+
+# Use an official Python image as the base image
+FROM python:${PY_VERSION}-slim
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the requirements file to the container
+COPY requirements-test.txt setup.py ./
+
+# Install the required packages
+RUN touch README.rst HISTORY.rst  # needed for setup.py not to die, but not really used
+RUN python setup.py develop
+RUN pip install -U pip
+RUN pip install --no-cache-dir -r requirements-test.txt
+
+# Copy the rest of the application code to the container
+COPY scripts/run_tests_docker.sh scripts/run_tests_docker.sh
+
+# Run the tests
+CMD [ "./scripts/run_tests_docker.sh" ]

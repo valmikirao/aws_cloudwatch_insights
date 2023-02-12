@@ -19,8 +19,6 @@ requirements = [
     'PyYAML>=3.11,<4.0'
 ]
 
-setup_requirements = ['pytest-runner', ]
-
 test_requirements = ['pytest>=7.2.1,<8.0.0', ]
 
 setup(
@@ -49,7 +47,6 @@ setup(
     keywords='aws_cloudwatch_insights',
     name='aws_cloudwatch_insights',
     packages=find_packages(include=['aws_cloudwatch_insights', 'aws_cloudwatch_insights.*']),
-    setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/valmikirao/aws_cloudwatch_insights',

@@ -95,11 +95,11 @@ class Insights:
         else:
             self.logs_client = boto3.client('logs')
 
-    def get_insights(self, query: str, result_limit: int, lambda_group_names: List[str], start_time: int,
+    def get_insights(self, query: str, result_limit: int, group_names: List[str], start_time: int,
                      end_time: int, callback: Optional[CallbackFunction] = None, error: Optional[ErrorFunction] = None,
                      jsonify: bool = True) -> Iterable[GenericDict]:
         response = self.logs_client.start_query(
-            logGroupNames=lambda_group_names,
+            logGroupNames=group_names,
             startTime=start_time,
             endTime=end_time,
             queryString=query,

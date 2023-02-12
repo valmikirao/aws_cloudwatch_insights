@@ -28,6 +28,7 @@ def test_content(response):
 
 def test_command_line_interface():
     """Test the CLI."""
+    assert False, 'Write something for this'
     runner = CliRunner()
     result = runner.invoke(cli.main)
     assert result.exit_code == 0
