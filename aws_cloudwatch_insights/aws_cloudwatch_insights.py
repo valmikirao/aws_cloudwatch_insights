@@ -108,23 +108,32 @@ class Insights:
         query_id = response['queryId']
         results: Iterable[GenericDict] = []
         response: GenericDict = {}
+        def _post_process_results(results_raw_: List[List[GenericDict]]) -> Iterable[GenericDict]:
+            results_ = dictify_results(results_raw_)
+            if jsonify:
+                results_ = jsonify_insights_results(results_)
+            return results_
+
         try:
             while True:
                 response = self.logs_client.get_query_results(queryId=query_id)
-                if response['status'] in (ResponseStatus.COMPLETE, ResponseStatus.RUNNING):
-                    results_: List[List[GenericDict]] = response.get('results', [])
-                    results = dictify_results(results_)
-                    if jsonify:
-                        results = list(jsonify_insights_results(results))
-                    if callback:
-                        callback(results)
-                    if response['status'] == ResponseStatus.COMPLETE:
-                        break
-                elif response['status'] != ResponseStatus.SCHEDULED:
-                    raise InsightsRemoteException(response['status'])
+                results_raw: List[List[GenericDict]] = response.get('results', [])
+                response_status = response['status']
+                if response_status in {ResponseStatus.RUNNING, ResponseStatus.SCHEDULED} and callback is not None:
+                    results = _post_process_results(results_raw)
+                    callback(results)
+                elif response_status == ResponseStatus.COMPLETE:
+                    results = _post_process_results(results_raw)
+                    break
+                elif response_status not in {ResponseStatus.RUNNING, ResponseStatus.SCHEDULED, ResponseStatus.COMPLETE}:
+                    raise InsightsRemoteException(response_status)
         except BaseException as e:
             if error:
-                return list(error(e, results))
+                error_results = error(e, results)
+                if error_results is not None:
+                    results = error_results
+                else:
+                    results = []
             else:
                 raise
         finally:
