@@ -6,6 +6,7 @@ services:
     build: &build
         dockerfile: Dockerfile.test
         context: .
+        target: all
         args:
             PY_VERSION: "3.6"
   py37:
@@ -38,3 +39,46 @@ services:
         <<: *build
         args:
             PY_VERSION: "3.11"
+
+  py36-no-cli:
+      volumes: *volumes
+      build: &build-no-cli
+          <<: *build
+          target: no-cli
+          args:
+              PY_VERSION: "3.6"
+
+  py37-no-cli:
+      volumes: *volumes
+      build:
+          <<: *build-no-cli
+          args:
+              PY_VERSION: "3.7"
+
+  py38-no-cli:
+      volumes: *volumes
+      build:
+          <<: *build-no-cli
+          args:
+              PY_VERSION: "3.8"
+
+  py39-no-cli:
+      volumes: *volumes
+      build:
+          <<: *build-no-cli
+          args:
+              PY_VERSION: "3.9"
+
+  py310-no-cli:
+      volumes: *volumes
+      build:
+          <<: *build-no-cli
+          args:
+              PY_VERSION: "3.10"
+
+  py311-no-cli:
+      volumes: *volumes
+      build:
+          <<: *build-no-cli
+          args:
+              PY_VERSION: "3.11"

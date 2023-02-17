@@ -5,11 +5,16 @@ from io import StringIO
 from typing import List, Optional, Dict, Any, Iterable
 
 import boto3
-import click
+
+try:
+    import click
+    from timedeltafmt import parse_timedelta
+except ModuleNotFoundError as e:
+    raise ModuleNotFoundError(f"{e.msg}, you may need to install the cli: `pip install aws_cloudwatch_insights[cli]`")
 
 from dateutil.parser import parse as parse_datetime
 
-from timedeltafmt import parse_timedelta
+
 import sys
 import re
 import yaml

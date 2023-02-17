@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -x
+set -ex
 
 PROJECT_DIR="$(dirname "$(dirname $0)")"
 FAILED_PYTHON_VERSIONS_FILES=($PROJECT_DIR/build/failed-python-*.txt)

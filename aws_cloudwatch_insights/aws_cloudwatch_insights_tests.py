@@ -2,7 +2,7 @@ import itertools
 from datetime import datetime
 from random import random
 from secrets import token_hex
-from typing import Optional, List, Union, cast
+from typing import Optional, List, cast
 from unittest.mock import MagicMock, call
 
 import pytest

@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
-set -x
+set -ex
 
 PY_VERSION="$(python --version)"
 PY_VERSION="${PY_VERSION/Python /}"  # just get the version number
-
-pytest || python --version > /app/build/failed-python-"$PY_VERSION".txt
+ARG_HASH="$(printf '%q ' "$@" | sha1sum)"
+ARG_HASH="${ARG_HASH::8}"
+pytest "$@" || echo "$(python --version)" "$(printf '%q ' "$@")" > /app/build/failed-python-"$PY_VERSION"-"$ARG_HASH".txt

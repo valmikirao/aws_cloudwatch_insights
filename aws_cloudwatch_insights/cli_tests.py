@@ -1,10 +1,24 @@
 import re
 
-from click.testing import CliRunner
+import pytest
 
-from aws_cloudwatch_insights import cli
+cli_modules_loaded = False
+
+try:
+    from click.testing import CliRunner
+    from aws_cloudwatch_insights import cli
+    cli_modules_loaded = True
+except ModuleNotFoundError as e:
+    # none of the tests here should be run if this fails
+    pass
+
+@pytest.mark.cli
+def test_cli_modules_loaded():
+    assert cli_modules_loaded, 'Tests in this file only work if you\'ve installed the full packaged' \
+                               ' (ie run `pip install -e \'.[all]\'`)'
 
 
+@pytest.mark.cli
 def test_command_line_interface():
     """
     Test the CLI.

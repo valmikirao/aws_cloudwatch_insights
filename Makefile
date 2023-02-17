@@ -1,15 +1,6 @@
 .PHONY: clean clean-test clean-pyc clean-build docs help develop test test-all
 .DEFAULT_GOAL := help
 
-define BROWSER_PYSCRIPT
-import os, webbrowser, sys
-
-from urllib.request import pathname2url
-
-webbrowser.open("file://" + pathname2url(os.path.abspath(sys.argv[1])))
-endef
-export BROWSER_PYSCRIPT
-
 define PRINT_HELP_PYSCRIPT
 import re, sys
 
@@ -89,4 +80,5 @@ install: clean ## install the package to the active Python's site-packages
 	python setup.py install
 
 develop: clean
-	python setup.py develop
+	pip install -e '.[all]'
+	pip install -r requirements_dev.txt
