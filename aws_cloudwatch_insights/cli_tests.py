@@ -8,9 +8,10 @@ try:
     from click.testing import CliRunner
     from aws_cloudwatch_insights import cli
     cli_modules_loaded = True
-except ModuleNotFoundError as e:
+except ModuleNotFoundError:
     # none of the tests here should be run if this fails
     pass
+
 
 @pytest.mark.cli
 def test_cli_modules_loaded():

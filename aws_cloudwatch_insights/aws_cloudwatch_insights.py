@@ -108,6 +108,7 @@ class Insights:
         query_id = response['queryId']
         results: Iterable[GenericDict] = []
         response: GenericDict = {}
+
         def _post_process_results(results_raw_: List[List[GenericDict]]) -> Iterable[GenericDict]:
             results_ = dictify_results(results_raw_)
             if jsonify:

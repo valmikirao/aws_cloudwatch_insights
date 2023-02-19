@@ -51,7 +51,12 @@ setup(
     include_package_data=True,
     keywords=['aws', 'cloudwatch', 'insights'],
     name='aws_cloudwatch_insights',
-    packages=find_packages(include=['aws_cloudwatch_insights', 'aws_cloudwatch_insights.*']),
+    # packages=find_packages(include=['aws_cloudwatch_insights', 'aws_cloudwatch_insights.*']),
+    py_modules=[
+        'aws_cloudwatch_insights',
+        'aws_cloudwatch_insights.aws_cloudwatch_insights',
+        'aws_cloudwatch_insights.cli'
+    ],
     url='https://github.com/valmikirao/aws_cloudwatch_insights',
     version='0.1.0',
     zip_safe=False,
