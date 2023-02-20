@@ -4,11 +4,8 @@
 
 from setuptools import setup, find_packages
 
-with open('README.rst') as readme_file:
+with open('README.md') as readme_file:
     readme = readme_file.read()
-
-with open('HISTORY.rst') as history_file:
-    history = history_file.read()
 
 requirements = [
     'boto3>=1.21.40,<2.0.0',
@@ -47,16 +44,11 @@ setup(
     install_requires=requirements,
     extras_require={'cli': cli_requirements},
     license="MIT license",
-    long_description=readme + '\n\n' + history,
+    long_description=readme,
     include_package_data=True,
     keywords=['aws', 'cloudwatch', 'insights'],
     name='aws_cloudwatch_insights',
-    # packages=find_packages(include=['aws_cloudwatch_insights', 'aws_cloudwatch_insights.*']),
-    py_modules=[
-        'aws_cloudwatch_insights',
-        'aws_cloudwatch_insights.aws_cloudwatch_insights',
-        'aws_cloudwatch_insights.cli'
-    ],
+    packages=find_packages(include=['aws_cloudwatch_insights', 'aws_cloudwatch_insights.*']),
     url='https://github.com/valmikirao/aws_cloudwatch_insights',
     version='0.1.0',
     zip_safe=False,

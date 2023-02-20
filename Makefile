@@ -34,9 +34,6 @@ clean-pyc: ## remove Python file artifacts
 	find . -name '__pycache__' -exec rm -fr {} +
 
 clean-test: ## remove test and coverage artifacts
-	rm -fr .tox/
-	rm -f .coverage
-	rm -fr htmlcov/
 	rm -fr .pytest_cache
 
 lint: ## check style with flake8
@@ -45,28 +42,11 @@ lint: ## check style with flake8
 test: ## run tests quickly with the default Python
 	pytest
 
-test-all: ## run tests on every Python version with tox
+test-all: ## run tests on every Python version with docker-compose
 	./scripts/run_tests_all.sh
 
-test-all-build:
+test-all-build: ## run tests on every Python version with docker-compose, making sure it rebuilds it if necessary
 	./scripts/run_tests_all.sh --build
-
-coverage: ## check code coverage quickly with the default Python
-	coverage run --source aws_cloudwatch_insights -m pytest
-	coverage report -m
-	coverage html
-	$(BROWSER) htmlcov/index.html
-
-docs: ## generate Sphinx HTML documentation, including API docs
-	rm -f docs/aws_cloudwatch_insights.rst
-	rm -f docs/modules.rst
-	sphinx-apidoc -o docs/ aws_cloudwatch_insights
-	$(MAKE) -C docs clean
-	$(MAKE) -C docs html
-	$(BROWSER) docs/_build/html/index.html
-
-servedocs: docs ## compile the docs watching for changes
-	watchmedo shell-command -p '*.rst' -c '$(MAKE) -C docs html' -R -D .
 
 release: dist ## package and upload a release
 	twine upload dist/*
@@ -80,5 +60,5 @@ install: clean ## install the package to the active Python's site-packages
 	python setup.py install
 
 develop: clean
-	pip install -e '.[all]'
+	pip install -e '.[cli]'
 	pip install -r requirements_dev.txt

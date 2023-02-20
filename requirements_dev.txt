@@ -2,7 +2,4 @@
 pip==23.0
 wheel==0.38.4
 flake8==3.7.8
-
-## Added by cookiecutter, don't know if I want them yet
-# Sphinx==1.8.5
-# twine==1.14.0
+twine==1.14.0

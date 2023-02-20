@@ -1,7 +1,8 @@
 """Main module."""
 import json
+from datetime import datetime, timedelta
 from json import JSONDecodeError
-from typing import List, Optional, Dict, Any, Callable, Iterable
+from typing import List, Optional, Dict, Any, Callable, Iterable, Union
 
 import boto3
 from botocore.client import BaseClient
@@ -90,14 +91,54 @@ def dictify_results(results: Iterable[Iterable[GenericDict]]) -> Iterable[Generi
 
 class Insights:
     def __init__(self, logs_client: Optional[BaseClient] = None):
+        """
+        Object for querying AWS Cloudwatch.  Optionally takes a boto3 client as an argument, otherwise creates its own
+        """
         if logs_client:
             self.logs_client = logs_client
         else:
             self.logs_client = boto3.client('logs')
 
-    def get_insights(self, query: str, result_limit: int, group_names: List[str], start_time: int,
-                     end_time: int, callback: Optional[CallbackFunction] = None, error: Optional[ErrorFunction] = None,
+    def get_insights(self, query: str, result_limit: int, group_names: List[str],
+                     start_time: Union[int, datetime, timedelta],
+                     end_time: Union[int, datetime, timedelta, None] = None,
+                     callback: Optional[CallbackFunction] = None, error: Optional[ErrorFunction] = None,
                      jsonify: bool = True) -> Iterable[GenericDict]:
+        """
+        Gets elements from AWS Cloudwatch Logs using an Insights query:
+
+        Returns an iterable of dicts
+
+        query: The Insights query
+        result_limit: Limit of the number of results returned
+        group_names: The log groups searched through
+        start_time: The time of the earliest record the query looks for.  Can be an int timestamp, a datetime, or a
+         timedelta.  If it's a timedelta, the start time is now offset by the delta
+        end_time: The time of the latest record the query looks for.  Accepts same values as `start_time`
+        callback: A function witch is called when partial results are returned, before the function returns the final
+            results.  Takes the partial results as an argument.
+        error: If included, this function is called when an exception is encountered (instead of not catching the
+          exception).  The arguments passed to the function are the Exception instance and the partial results.  If
+          this function doesn't through an exception, get_insights() returns the returned value of this function, empty
+          list if that value is None
+        jsonify: If set to True, attempts to parse suspected json objects.  If parsing fails, just returns the string.
+          Default: True
+        """
+        if end_time is None:
+            end_time = datetime.now()
+
+        def _normalize_time(time: Union[int, datetime, timedelta]) -> int:
+            if isinstance(time, int):
+                return time
+            elif isinstance(time, datetime):
+                return int(time.timestamp())
+            elif isinstance(time, timedelta):
+                return int((datetime.now() + time).timestamp())
+            else:
+                raise NotImplementedError()
+        start_time = _normalize_time(start_time)
+        end_time = _normalize_time(end_time)
+
         response = self.logs_client.start_query(
             logGroupNames=group_names,
             startTime=start_time,

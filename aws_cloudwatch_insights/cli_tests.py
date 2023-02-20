@@ -27,7 +27,7 @@ def test_command_line_interface():
     """
     runner = CliRunner()
     result = runner.invoke(cli.main)
-    assert result.exit_code == 1, 'Fails with no arguments'
+    assert result.exit_code == 2, 'Fails with no arguments'
     help_result = runner.invoke(cli.main, ['--help'])
     assert help_result.exit_code == 0
     assert re.search(r'--help\s+Show this message and exit\.', help_result.output)

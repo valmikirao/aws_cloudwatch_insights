@@ -99,32 +99,45 @@ class _OptionDefault:
         return repr(self.value)
 
 
+class Fields:
+    query = 'query'
+    limit = 'limit'
+    start = 'start'
+    end = 'end'
+    jsonify = 'jsonify'
+    out_file = 'out_file'
+    region = 'region'
+    quiet = 'quiet'
+    groups = 'groups'
+
+
 DEFAULTS = {
-    'limit': 100,
-    'start': '-1d',
-    'end': 0,
-    'jsonify': True,
-    'out_file': None,
-    'region': None
+    Fields.limit: 100,
+    Fields.start: '-1d',
+    Fields.end: '-0s',
+    Fields.jsonify: True,
+    Fields.out_file: None,
+    Fields.region: None,
+    Fields.quiet: False,
 }
 
 
 def _consolidate_opts(file, kwargs):
     cli_opts = {k: v for k, v in kwargs.items() if v is not None}
-    if file:
+    if file and file != '-':
         fin = open(file, 'r')
     else:
         fin = sys.stdin
     try:
         input_str = fin.read()
     finally:
-        if file:
+        if fin is not sys.stdin:
             fin.close()
 
     file_opts: Dict[str, Any]
     try:
         file_opts = _yaml_loads(input_str)
-        if not isinstance(file_opts, dict):
+        if not isinstance(file_opts, dict) or 'query' not in file_opts:
             file_opts = {'query': input_str}
     except yaml.YAMLError:
         file_opts = {'query': input_str}
@@ -137,12 +150,12 @@ def _consolidate_opts(file, kwargs):
     return opts
 
 
-def _run_acwi(query: str, silent: bool, result_limit: int, out_file: Optional[str], lambda_group_names: List[str],
+def _run_acwi(query: str, quiet: bool, result_limit: int, out_file: Optional[str], lambda_group_names: List[str],
               start_time: int, end_time: int, jsonify: bool, region: Optional[str]) -> None:
     logs_client = boto3.client('logs', region_name=region)
 
     flipbook: Optional[AsciiFlipbook]
-    if not silent:
+    if not quiet:
         flipbook = AsciiFlipbook(stream=sys.stderr)
         flipbook.flip_to(f'Starting query with limit {result_limit}')
     else:
@@ -170,7 +183,7 @@ def _run_acwi(query: str, silent: bool, result_limit: int, out_file: Optional[st
         flipbook.flip_to(page)
 
     callback: Optional[CallbackFunction]
-    if not silent and os.isatty(STDERR_FD):
+    if not quiet and os.isatty(STDERR_FD):
         callback = _display_progress
     else:
         callback = None
@@ -210,7 +223,7 @@ def _run_acwi(query: str, silent: bool, result_limit: int, out_file: Optional[st
         finally:
             if fout is not sys.stdout:
                 fout.close()
-        if not silent and (
+        if not quiet and (
             fout is not sys.stdout
             # if stdout is being piped somewhere but stderr is still a tty
             or (os.isatty(STDERR_FD) and not os.isatty(STDOUT_FD))
@@ -219,38 +232,56 @@ def _run_acwi(query: str, silent: bool, result_limit: int, out_file: Optional[st
 
 
 @click.command()
-@click.argument('file', required=False)
-@click.option('--limit', '-l')
-@click.option('--start', '-s')
-@click.option('--end', '-e')
-@click.option('--jsonify/--no-jsonify', '-j/-J', default=True)
-@click.option('--groups', '--group', '-g')
-@click.option('--out-file', '--out', '-o')
-@click.option('--region', '-r')
+@click.argument('file')
+@click.option('--limit', '-l', help=f"The maximum number or items returned. Default {DEFAULTS[Fields.limit]!r}."
+                                    f" Yaml file field: {Fields.limit!r}")
+@click.option('--start', '-s', help=f"Earliest record the query will search for.  Can be an integer timestamp, an iso"
+                                    f" date, or a relative indicator with dhms: 1000, '2023-02-20T14:56:40-05:00', or"
+                                    f" '-3d'.  Default: {DEFAULTS[Fields.start]!r}.  Yaml file field: {Fields.start!r}")
+@click.option('--end', '-e', help=f"Latest record the query will search for.  Can be an integer timestamp, an iso date,"
+                                  f" or a relative indicator with dhms. Default: {DEFAULTS[Fields.end]!r} (now).  Yaml"
+                                  f" file field: {Fields.end!r}")
+@click.option('--jsonify/--no-jsonify', '-j/-J', default=True,
+              help=f"When true, attempts to parse fields that look like they might be json object into a json"
+                   f" structure. If it can't parse the fields, leaves them as string.  Default:"
+                   f" {DEFAULTS[Fields.jsonify]!r}.  Yaml file field: {Fields.jsonify!r}")
+@click.option('--groups', '--group', '-g', help=f"A comma delimited list of the log groups to search through.  No"
+                                                f" Default.  Yaml file field: {Fields.groups!r}")
+@click.option('--out-file', '--out', '-o', help=f"If included, outputs results to stated file.  Default is standard"
+                                                f" out.  Yaml file field: {Fields.out_file!r}")
+@click.option('--region', '-r', help=f"AWS Region.  If excluded, uses system default.  Yaml file field:"
+                                     f" {Fields.region!r}")
+@click.option('--quiet/--not-quiet', '-q/-Q', help=f"If true, will not give status outputs to standard error.  Default"
+                                                   f" is {DEFAULTS[Fields.quiet]}.  Yaml file field: {Fields.quiet!r}")
 def main(file, **kwargs):
-    """Console script for aws_cloudwatch_insights."""
+    """
+    Console script for aws_cloudwatch_insights. FILE is a file either containing just the AWS Insights query or a
+     yaml file with a `query` field and other options.
+
+    Returns items in a .jsonl format
+    """
     opts = _consolidate_opts(file, kwargs)
 
-    query = opts['query']
-    jsonify = opts['jsonify']
-    lambda_group_names = sorted(_get_list_opt(opts['groups'], split_with=','))
-    start_time = _get_time(opts['start'])
-    end_time = _get_time(opts['end'])
+    query = opts[Fields.query]
+    jsonify = opts[Fields.jsonify]
+    lambda_group_names = sorted(_get_list_opt(opts[Fields.groups], split_with=','))
+    start_time = _get_time(opts[Fields.start])
+    end_time = _get_time(opts[Fields.end])
 
-    result_limit = int(opts['limit'])
+    result_limit = int(opts[Fields.limit])
 
-    out_file = opts['out_file']
+    out_file = opts[Fields.out_file]
 
-    if 'silent' in opts:
-        silent = opts['silent']
+    if Fields.quiet in opts:
+        quiet = opts[Fields.quiet]
     else:
-        silent = not sys.stderr.isatty()
+        quiet = not sys.stderr.isatty()
 
-    region = opts['region']
+    region = opts[Fields.region]
 
     _run_acwi(
         query,
-        silent=silent,
+        quiet=quiet,
         result_limit=result_limit,
         out_file=out_file,
         lambda_group_names=lambda_group_names,
