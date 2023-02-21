@@ -1,10 +1,9 @@
 # AWS Cloudwatch Insights
 
-v0.1.0
+![version](https://img.shields.io/pypi/v/aws_cloudwatch_insights)
+![python versions](https://img.shields.io/pypi/pyversions/aws_cloudwatch_insights)
 
-Python Versions: 3.6, 3.7, 3.8, 3.9, 3.10, 3.11
-
-Both command line tool and python API to simplify interacting with AWS cloudwatch insights
+Both a command line tool and a python API to simplify interacting with AWS cloudwatch insights
 
 ## CLI
 
@@ -159,7 +158,7 @@ No CI/CD or coverage yet
 ## To Do
 * If someone tells me they actually use this, I'll bump it to v1.0.0
 * More extensive CLI unit tests
-* Fancy badges in the README
+* Tests to make sure the version is updated and CHANGELOG is updated before publishing new version of package
 * `--csv` output option
 * Integration tests
 * CI/CD

@@ -3,9 +3,11 @@
 """The setup script."""
 
 from setuptools import setup, find_packages
+import m2r
 
 with open('README.md') as readme_file:
     readme = readme_file.read()
+readme = m2r.convert(readme)
 
 requirements = [
     'boto3>=1.21.40,<2.0.0',
@@ -23,7 +25,7 @@ setup(
     author_email='valmikirao@gmail.com',
     python_requires='>=3.6',
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
@@ -50,6 +52,6 @@ setup(
     name='aws_cloudwatch_insights',
     packages=find_packages(include=['aws_cloudwatch_insights', 'aws_cloudwatch_insights.*']),
     url='https://github.com/valmikirao/aws_cloudwatch_insights',
-    version='0.1.0',
+    version='0.1.1',
     zip_safe=False,
 )
