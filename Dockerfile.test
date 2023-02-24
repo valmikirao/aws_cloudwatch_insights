@@ -26,7 +26,7 @@ RUN pip install -e '.[cli]'
 RUN pip install --no-cache-dir -r requirements_test.txt
 
 # Run the tests
-CMD [ "./scripts/run_tests_docker.sh" ]
+CMD [ "bash", "./scripts/run_tests_docker.sh" ]
 
 FROM base as no-cli
 
@@ -34,6 +34,6 @@ RUN pip install -e .
 RUN pip install --no-cache-dir -r requirements_test.txt
 
 # Run the tests
-CMD [ "./scripts/run_tests_docker.sh", "-m", "not cli" ]
+CMD [ "bash", "./scripts/run_tests_docker.sh", "-m", "not cli" ]
 
 
