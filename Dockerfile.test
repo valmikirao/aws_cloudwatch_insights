@@ -7,11 +7,11 @@ FROM python:${PY_VERSION}-slim as base
 # Set the working directory in the container
 WORKDIR /app
 
-RUN if [[ ! "$(python --version)" == "Python 3.6.15" ]]; then \
+RUN ["bash", "-c", "if [[ ! \"$(python --version)\" == 'Python 3.6.15' ]]; then \
       pip install 'pip==23.0.1'; \
     else \
       pip install 'pip==21.3.1'; \
-    fi
+    fi"]
 
 # you should mount the code into /app for the tests to work
 
@@ -26,7 +26,7 @@ RUN pip install -e '.[cli]'
 RUN pip install --no-cache-dir -r requirements_test.txt
 
 # Run the tests
-CMD [ "bash", "./scripts/run_tests_docker.sh" ]
+CMD [ "./scripts/run_tests_docker.sh" ]
 
 FROM base as no-cli
 
@@ -34,6 +34,6 @@ RUN pip install -e .
 RUN pip install --no-cache-dir -r requirements_test.txt
 
 # Run the tests
-CMD [ "bash", "./scripts/run_tests_docker.sh", "-m", "not cli" ]
+CMD [ "./scripts/run_tests_docker.sh", "-m", "not cli" ]
 
 
