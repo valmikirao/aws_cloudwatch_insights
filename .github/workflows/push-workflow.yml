@@ -1,5 +1,5 @@
 name: GitHub Actions Demo
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+run-name: ${{ github.actor }} pushed a change 🚀
 on: [push]
 jobs:
   Explore-GitHub-Actions:
@@ -15,4 +15,6 @@ jobs:
       - name: List files in the repository
         run: |
           ls ${{ github.workspace }}
+      - name: Run Tests
+        run: make test-all-build
       - run: echo "🍏 This job's status is ${{ job.status }}."
