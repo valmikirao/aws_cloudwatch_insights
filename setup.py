@@ -3,11 +3,20 @@
 """The setup script."""
 
 from setuptools import setup, find_packages
-import m2r
+
+m2r_installed = False
+
+try:
+    import m2r
+    m2r_installed = True
+except ModuleNotFoundError as e:
+    pass
 
 with open('README.md') as readme_file:
     readme = readme_file.read()
-readme = m2r.convert(readme)
+if m2r_installed:
+    # only needed for publishing not for, say, running tests
+    readme = m2r.convert(readme)
 
 requirements = [
     'boto3>=1.21.40,<2.0.0',
