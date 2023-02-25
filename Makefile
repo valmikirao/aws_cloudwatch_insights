@@ -42,11 +42,8 @@ lint: ## check style with flake8
 test: ## run tests quickly with the default Python
 	pytest
 
-test-all: ## run tests on every Python version with docker-compose
-	./scripts/run_tests_all.sh
-
-test-all-build: ## run tests on every Python version with docker-compose, making sure it rebuilds it if necessary
-	./scripts/run_tests_all.sh --build
+test-all: ## run tests on every Python version with tox
+	tox
 
 release: dist ## package and upload a release
 	twine upload dist/*

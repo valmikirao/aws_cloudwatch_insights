@@ -5,6 +5,7 @@ from io import StringIO
 from typing import List, Optional, Dict, Any, Iterable
 
 import boto3
+from yaml import Loader
 
 try:
     import click
@@ -85,7 +86,7 @@ def _get_list_opt(raw_opt, split_with=None):
 
 def _yaml_loads(yaml_str):
     with StringIO(yaml_str) as fin:
-        return yaml.load(fin)
+        return yaml.load(fin, Loader)
 
 
 class _OptionDefault:

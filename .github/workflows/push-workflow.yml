@@ -16,5 +16,5 @@ jobs:
         run: |
           ls ${{ github.workspace }}
       - name: Run Tests
-        run: make test-all-build
+        run: tox run-parallel
       - run: echo "🍏 This job's status is ${{ job.status }}."

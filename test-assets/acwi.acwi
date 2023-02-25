@@ -1,0 +1,3 @@
+fields @timestamp, @message, @logStream, @log
+| sort @timestamp desc
+| limit 20

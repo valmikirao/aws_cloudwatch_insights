@@ -24,9 +24,9 @@ requirements = [
 ]
 
 cli_requirements = [
-    'Click>=7.0,<8.0',
+    'Click>=7.0.0,<8.0.0',
     'timedeltafmt>=0.1.1,<1.0.0',
-    'PyYAML>=3.11,<4.0'
+    'PyYAML>=6.0.0,<7.0.0'
 ]
 
 setup(
