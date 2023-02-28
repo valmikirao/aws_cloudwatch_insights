@@ -25,7 +25,7 @@ jobs:
           key: tox-${{ matrix.python }}-${{ hashFiles('setup.py', 'requirements_test.txt') }}-${{ hashFiles('requirements-dev.txt') }}
           restore-keys: |
               tox-${{ matrix.python }}-${{ hashFiles('setup.py', 'requirements_test.txt') }}-${{ hashFiles('requirements-dev.txt') }}
-              tox-${{ matrix.python }}-${{ hashFiles('setup.py', "requirements_test.txt') }}-
+              tox-${{ matrix.python }}-${{ hashFiles('setup.py', 'requirements_test.txt') }}-
               tox-${{ matrix.python }}-
       - name: Run tox
         # Run tox using the version of Python in `PATH`
