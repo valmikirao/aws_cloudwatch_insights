@@ -22,10 +22,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: .tox
-          key: tox-${{ matrix.python }}-${{ hashFiles('setup.py', 'requirements_test.txt') }}-${{ hashFiles('requirements_dev.txt') }}
+          key: tox-${{ matrix.python }}-${{ hashFiles('setup.py') }}
           restore-keys: |
-              tox-${{ matrix.python }}-${{ hashFiles('setup.py', 'requirements_test.txt') }}-${{ hashFiles('requirements_dev.txt') }}
-              tox-${{ matrix.python }}-${{ hashFiles('setup.py', 'requirements_test.txt') }}-
+              tox-${{ matrix.python }}-${{ hashFiles('setup.py') }}
               tox-${{ matrix.python }}-
       - name: Run Tox
         # Run tox using the version of Python in `PATH`
