@@ -18,7 +18,7 @@ jobs:
           python-version: ${{ matrix.python }}
       - name: Install tox and any other packages
         run: pip install -r requirements_tox.txt
-      - name: Cache tox
+      - name: Use Tox Cache
         uses: actions/cache@v3
         with:
           path: ~/.tox
@@ -27,6 +27,11 @@ jobs:
               tox-${{ matrix.python }}-${{ hashFiles('setup.py', 'requirements_test.txt') }}-${{ hashFiles('requirements-dev.txt') }}
               tox-${{ matrix.python }}-${{ hashFiles('setup.py', 'requirements_test.txt') }}-
               tox-${{ matrix.python }}-
-      - name: Run tox
+      - name: Run Tox
         # Run tox using the version of Python in `PATH`
         run: ./scripts/tox_github.sh "${{ matrix.python }}"
+      - name: Save Tox Cache
+        uses: actions/cache/save@v3
+        with:
+            path: ~/.tox
+
