@@ -2,7 +2,7 @@
 import os
 from datetime import datetime, timedelta
 from io import StringIO
-from typing import List, Optional, Dict, Any, Iterable
+from typing import List, Optional, Dict, Any, Iterable, TextIO, cast
 
 import boto3
 from yaml import Loader
@@ -162,14 +162,15 @@ def _run_acwi(query: str, quiet: bool, result_limit: int, out_file: Optional[str
     else:
         flipbook = None
 
-    def _display_progress(results_: Iterable[GenericDict]) -> None:
+    def _display_progress(results: Iterable[GenericDict]) -> None:
         assert flipbook
         page = ''
-        results_ = list(results_)
+        results_ = list(results)
+        page_results: List[Optional[GenericDict]]
         if len(results_) > 20:
             page_results = [*results_[:10], None, *results_[-10:]]
         else:
-            page_results = results_
+            page_results = cast(List[Optional[GenericDict]], results_)
         for row in page_results:
             if row is not None:
                 row_json = json.dumps(row)
@@ -189,6 +190,7 @@ def _run_acwi(query: str, quiet: bool, result_limit: int, out_file: Optional[str
     else:
         callback = None
 
+    fout: TextIO
     if out_file is not None:
         fout = open(out_file, 'w')
     else:

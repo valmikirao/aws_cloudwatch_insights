@@ -3,6 +3,7 @@
 """The setup script."""
 
 from setuptools import setup, find_packages
+from configparser import ConfigParser
 
 m2r_installed = False
 
@@ -17,6 +18,10 @@ with open('README.md') as readme_file:
 if m2r_installed:
     # only needed for publishing not for, say, running tests
     readme = m2r.convert(readme)
+
+cfg = ConfigParser()
+cfg.read('setup.cfg')
+version = cfg['bumpversion']['current_version']
 
 requirements = [
     'boto3>=1.21.40,<2.0.0',
@@ -60,6 +65,6 @@ setup(
     name='aws_cloudwatch_insights',
     packages=find_packages(include=['aws_cloudwatch_insights', 'aws_cloudwatch_insights.*']),
     url='https://github.com/valmikirao/aws_cloudwatch_insights',
-    version='0.1.1',
+    version=version,
     zip_safe=False,
 )

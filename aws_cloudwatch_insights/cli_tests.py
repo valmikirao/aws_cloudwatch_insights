@@ -28,6 +28,7 @@ QUERY_YAML = """fields @timestamp, @message, @logStream, @log
 | sort @timestamp desc
 | limit 30"""
 
+
 @pytest.mark.cli
 def test_cli_modules_loaded():
     assert cli_modules_loaded, 'Tests in this file only work if you\'ve installed the full packaged' \
@@ -61,7 +62,8 @@ QUERY_YAML = """fields @timestamp, @message, @logStream, @log
 """
 
 CLI_ARGS = ['--group', '/aws/lambda/log_maker_a,/aws/lambda/log_maker_b', '--region', 'us-west-2',
-            os.path.join(PROJECT_ROOT, 'test-assets', 'acwi.acwi'), '--start', '-30d', '--out', 'results.json', '-l', 139]
+            os.path.join(PROJECT_ROOT, 'test-assets', 'acwi.acwi'), '--start', '-30d', '--out', 'results.json', '-l',
+            139]
 EXPECTED_CALLS = [call(
     QUERY,
     end_time=int(NOW.timestamp()), start_time=int((NOW - timedelta(days=30)).timestamp()),
@@ -91,4 +93,3 @@ def test_command_line_interface(monkeypatch, cli_args, expected_calls):
         result = runner.invoke(cli.main, cli_args)
     assert result.exit_code == 0
     assert mock_run_acwi.call_args_list == expected_calls
-

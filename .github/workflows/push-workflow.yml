@@ -20,8 +20,4 @@ jobs:
         run: pip install -r requirements_tox.txt
       - name: Run tox
         # Run tox using the version of Python in `PATH`
-        run: |
-            set -ex
-            PY="${{ matrix.python }}"
-            PY="py${PY/./}" # 3.7 -> py37
-            tox -e "${PY}-cli,${PY}-nocli"
+        run: ./scripts/tox_github.sh "${{ matrix.python }}"
