@@ -2,4 +2,4 @@
 
 **0.1.1** - Tweaks on README.md and added CHANGELOG.md
 
-**0.1.1a1** - Testing CI/CD Release
+**0.1.2** - Got CI/CD working
