@@ -5,8 +5,16 @@ from json import JSONDecodeError
 from typing import List, Optional, Dict, Any, Callable, Iterable, Union
 
 import boto3
-from botocore.client import BaseClient
 from botocore.exceptions import ClientError
+
+try:
+    from mypy_boto3_logs import CloudWatchLogsClient
+    from mypy_boto3_logs.type_defs import GetQueryResultsResponseTypeDef, ResultFieldTypeDef
+except ModuleNotFoundError:
+    # don't want to make stubs required
+    CloudWatchLogsClient = Any  # type: ignore
+    GetQueryResultsResponseTypeDef = Any  # type: ignore
+    ResultFieldTypeDef = Any  # type: ignore
 
 
 GenericDict = Dict[str, Any]
@@ -83,14 +91,14 @@ def jsonify_insights_results(results: Iterable[GenericDict]) -> Iterable[Generic
             yield returned_row
 
 
-def dictify_results(results: Iterable[Iterable[GenericDict]]) -> Iterable[GenericDict]:
+def dictify_results(results: Iterable[Iterable[ResultFieldTypeDef]]) -> Iterable[GenericDict]:
     for row in results:
         returned_row = {i['field']: i['value'] for i in row}
         yield returned_row
 
 
 class Insights:
-    def __init__(self, logs_client: Optional[BaseClient] = None):
+    def __init__(self, logs_client: Optional[CloudWatchLogsClient] = None):
         """
         Object for querying AWS Cloudwatch.  Optionally takes a boto3 client as an argument, otherwise creates its own
         """
@@ -139,18 +147,18 @@ class Insights:
         start_time = _normalize_time(start_time)
         end_time = _normalize_time(end_time)
 
-        response = self.logs_client.start_query(
+        start_query_response = self.logs_client.start_query(
             logGroupNames=group_names,
             startTime=start_time,
             endTime=end_time,
             queryString=query,
             limit=result_limit
         )
-        query_id = response['queryId']
+        query_id = start_query_response['queryId']
         results: Iterable[GenericDict] = []
-        response: GenericDict = {}
+        response: Union[GenericDict, GetQueryResultsResponseTypeDef] = {}
 
-        def _post_process_results(results_raw_: List[List[GenericDict]]) -> Iterable[GenericDict]:
+        def _post_process_results(results_raw_: List[List[ResultFieldTypeDef]]) -> Iterable[GenericDict]:
             results_ = dictify_results(results_raw_)
             if jsonify:
                 results_ = jsonify_insights_results(results_)
@@ -159,7 +167,7 @@ class Insights:
         try:
             while True:
                 response = self.logs_client.get_query_results(queryId=query_id)
-                results_raw: List[List[GenericDict]] = response.get('results', [])
+                results_raw = response.get('results', [])
                 response_status = response['status']
                 if response_status in {ResponseStatus.RUNNING, ResponseStatus.SCHEDULED} and callback is not None:
                     results = _post_process_results(results_raw)

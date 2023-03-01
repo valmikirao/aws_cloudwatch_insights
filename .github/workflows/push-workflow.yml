@@ -1,0 +1,45 @@
+name: Run Tests
+run-name: ${{ github.actor }} pushed a change 🚀
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.7", "3.8", "3.9", "3.10", "3.11"]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install tox and any other packages
+        run: pip install -r requirements_tox.txt
+      - name: Use Tox Cache
+        uses: actions/cache@v3
+        with:
+          path: .tox
+          key: tox-${{ matrix.python }}-${{ hashFiles('setup.py') }}
+          restore-keys: |
+              tox-${{ matrix.python }}-${{ hashFiles('setup.py') }}
+              tox-${{ matrix.python }}-
+      - name: Run Tox
+        # Run tox using the version of Python in `PATH`
+        run: ./scripts/tox_github.sh "${{ matrix.python }}"
+  results:
+      if: ${{ always() }}
+      runs-on: ubuntu-latest
+      name: Final Results
+      needs: [build]
+      steps:
+          -   run: |
+                  result="${{ needs.build.result }}"
+                  if [[ $result == "success"  ]]; then
+                    exit 0
+                  else
+                    exit 1
+                  fi
+

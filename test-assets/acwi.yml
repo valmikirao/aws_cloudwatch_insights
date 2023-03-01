@@ -1,0 +1,10 @@
+query: |
+    fields @timestamp, @message, @logStream, @log
+    | sort @timestamp desc
+    | limit 30
+start: "1990-01-01T00:00:00Z"
+groups:
+    - /aws/lambda/a
+    - /aws/lambda/c
+limit: 30
+region: us-west-2

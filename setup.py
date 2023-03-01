@@ -3,11 +3,25 @@
 """The setup script."""
 
 from setuptools import setup, find_packages
-import m2r
+from configparser import ConfigParser
+
+m2r_installed = False
+
+try:
+    import m2r
+    m2r_installed = True
+except ModuleNotFoundError as e:
+    pass
 
 with open('README.md') as readme_file:
     readme = readme_file.read()
-readme = m2r.convert(readme)
+if m2r_installed:
+    # only needed for publishing not for, say, running tests
+    readme = m2r.convert(readme)
+
+cfg = ConfigParser()
+cfg.read('setup.cfg')
+version = cfg['bumpversion']['current_version']
 
 requirements = [
     'boto3>=1.21.40,<2.0.0',
@@ -15,22 +29,45 @@ requirements = [
 ]
 
 cli_requirements = [
-    'Click>=7.0,<8.0',
+    'Click>=7.0.0,<8.0.0',
     'timedeltafmt>=0.1.1,<1.0.0',
-    'PyYAML>=3.11,<4.0'
+    'PyYAML>=6.0.0,<7.0.0'
 ]
+
+test_requirements = [
+    'pytest>=7.0.0,<8.0.0',
+    'freezegun>=1.2.2,<2.0.0'
+]
+
+lint_requirements = [
+    *test_requirements,
+    'flake8==3.7.8',
+    'mypy==1.0.1',
+
+    # stubs
+    'boto3-stubs==1.26.80',
+    'botocore-stubs==1.29.80',
+    'mypy-boto3-logs==1.26.53',
+    'types-PyYAML==6.0.12.8',
+    'types-Pygments==2.14.0.5',
+    'types-click==7.1.8',
+    'types-colorama==0.4.15.8',
+    'types-docutils==0.19.1.6',
+    'types-python-dateutil==2.8.19.9',
+    'types-setuptools==67.4.0.3'
+]
+
 
 setup(
     author="Valmiki Rao",
     author_email='valmikirao@gmail.com',
-    python_requires='>=3.6',
+    python_requires='>=3.7',
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
@@ -44,7 +81,11 @@ setup(
         ],
     },
     install_requires=requirements,
-    extras_require={'cli': cli_requirements},
+    extras_require={
+        'cli': cli_requirements,
+        'test': test_requirements,
+        'lint': lint_requirements
+    },
     license="MIT license",
     long_description=readme,
     include_package_data=True,
@@ -52,6 +93,6 @@ setup(
     name='aws_cloudwatch_insights',
     packages=find_packages(include=['aws_cloudwatch_insights', 'aws_cloudwatch_insights.*']),
     url='https://github.com/valmikirao/aws_cloudwatch_insights',
-    version='0.1.1',
+    version=version,
     zip_safe=False,
 )

@@ -37,16 +37,14 @@ clean-test: ## remove test and coverage artifacts
 	rm -fr .pytest_cache
 
 lint: ## check style with flake8
-	flake8 aws_cloudwatch_insights tests
+	flake8 aws_cloudwatch_insights scripts
+	mypy aws_cloudwatch_insights scripts
 
 test: ## run tests quickly with the default Python
 	pytest
 
-test-all: ## run tests on every Python version with docker-compose
-	./scripts/run_tests_all.sh
-
-test-all-build: ## run tests on every Python version with docker-compose, making sure it rebuilds it if necessary
-	./scripts/run_tests_all.sh --build
+test-all: ## run tests on every Python version with tox
+	tox
 
 release: dist ## package and upload a release
 	twine upload dist/*
@@ -60,5 +58,5 @@ install: clean ## install the package to the active Python's site-packages
 	python setup.py install
 
 develop: clean
-	pip install -e '.[cli]'
+	pip install -e '.[cli,test,lint]'
 	pip install -r requirements_dev.txt
