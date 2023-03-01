@@ -1,4 +1,4 @@
-.PHONY: clean clean-test clean-pyc clean-build docs help develop test test-all
+.PHONY: clean clean-test clean-pyc clean-build docs help develop test test-all publish
 .DEFAULT_GOAL := help
 
 define PRINT_HELP_PYSCRIPT
@@ -46,8 +46,8 @@ test: ## run tests quickly with the default Python
 test-all: ## run tests on every Python version with tox
 	tox
 
-release: dist ## package and upload a release
-	twine upload dist/*
+publish: dist ## package and upload a release (should only be used in github actions)
+	twine upload --username __token__ --password $(PYPI_PASSWORD) dist/*
 
 dist: clean ## builds source and wheel package
 	python setup.py sdist
