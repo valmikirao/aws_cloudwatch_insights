@@ -18,8 +18,9 @@ jobs:
       with:
         python-version: '3.7'
     - name: Publish
-      run: |
-        PYPI_PASSWORD="${{ secrets.PYPI_PASSWORD }}"
-        GITHUB_RELEASE_VERSION="${{ github.ref_name }}"
-        ./scripts/publish_package.sh
+      run: ./scripts/publish_package.sh
+      env:
+          PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+          GITHUB_RELEASE_VERSION: ${{ github.ref_name }}
+
 
