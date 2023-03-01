@@ -29,4 +29,17 @@ jobs:
       - name: Run Tox
         # Run tox using the version of Python in `PATH`
         run: ./scripts/tox_github.sh "${{ matrix.python }}"
+  results:
+      if: ${{ always() }}
+      runs-on: ubuntu-latest
+      name: Final Results
+      needs: [build]
+      steps:
+          -   run: |
+                  result="${{ needs.build.result }}"
+                  if [[ $result == "success"  ]]; then
+                    exit 0
+                  else
+                    exit 1
+                  fi
 
