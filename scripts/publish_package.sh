@@ -13,7 +13,7 @@ function assert_env() {
 
 assert_env PYPI_PASSWORD
 assert_env GITHUB_RELEASE_VERSION
-assert_env BRANCH
+BRANCH=$(git branch --show-current)
 
 SCRIPTS_DIR="$(dirname "$0")"
 VERSION="$(python "${SCRIPTS_DIR}/print_version.py")"

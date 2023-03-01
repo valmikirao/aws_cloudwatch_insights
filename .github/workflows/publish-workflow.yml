@@ -17,6 +17,9 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: '3.7'
-    - name: Install dependencies
+    - name: Publish
       run: |
-        python -m pip install --upgrade pip
+        PYPI_PASSWORD="${{ secrets.PYPI_PASSWORD }}"
+        GITHUB_RELEASE_VERSION="${{ github.ref_name }}"
+        ./scripts/publish_package.sh
+
