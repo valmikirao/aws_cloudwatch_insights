@@ -22,6 +22,3 @@ jobs:
       env:
           PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
           GITHUB_RELEASE_VERSION: ${{ github.ref_name }}
-          IS_MASTER: ${{ github.ref_protected }}
-
-

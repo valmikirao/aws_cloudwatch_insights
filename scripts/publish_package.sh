@@ -23,12 +23,5 @@ if [[ "$GITHUB_RELEASE_VERSION" !=  "$VERSION" ]]; then
     exit 2
 fi
 
-if [[ "$IS_MASTER" != true ]] && ! grep -q a <<< "$VERSION"; then
-    echo "Version $VERSION invalid for branch $BRANCH: only alpha release can be done on non-master branches" >&2
-    exit 3
-fi
-
-echo Got here
-exit 0
 pip install -r requirements_publish.txt
 make publish
