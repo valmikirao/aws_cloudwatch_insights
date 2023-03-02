@@ -2,6 +2,7 @@
 
 ![version](https://img.shields.io/pypi/v/aws_cloudwatch_insights)
 ![python versions](https://img.shields.io/pypi/pyversions/aws_cloudwatch_insights)
+![build](https://img.shields.io/github/actions/workflow/status/valmikirao/aws_cloudwatch_insights/push-workflow.yml?branch=master)
 
 Both a command line tool and a python API to simplify interacting with AWS cloudwatch insights
 
@@ -158,10 +159,8 @@ No CI/CD or coverage yet
 ## To Do
 * If someone tells me they actually use this, I'll bump it to v1.0.0
 * More extensive CLI unit tests
-* Tests to make sure the version is updated and CHANGELOG is updated before publishing new version of package
 * `--csv` output option
 * Integration tests
-* CI/CD
 
 ## Credits
 
