@@ -79,6 +79,8 @@ EXPECTED_CALLS_YAML = [call(
     lambda_group_names=['/aws/lambda/a', '/aws/lambda/c'], result_limit=30, out_file=ANY, region='us-east-2',
     quiet=False, jsonify=True
 )]
+
+
 @pytest.mark.cli
 @pytest.mark.parametrize('cli_args,expected_calls', [
     (CLI_ARGS, EXPECTED_CALLS),

@@ -36,26 +36,27 @@ cli_requirements = [
 
 test_requirements = [
     'pytest>=7.0.0,<8.0.0',
-    'freezegun>=1.2.2,<2.0.0'
+    'freezegun>=1.2.2,<2.0.0',
+    'mypy>=1.0.1,<2.0.0'
 ]
 
 lint_requirements = [
-    *test_requirements,
-    'flake8==3.7.8',
-    'mypy==1.0.1',
-
-    # stubs
-    'boto3-stubs==1.26.80',
-    'botocore-stubs==1.29.80',
-    'mypy-boto3-logs==1.26.53',
-    'types-PyYAML==6.0.12.8',
-    'types-Pygments==2.14.0.5',
-    'types-click==7.1.8',
-    'types-colorama==0.4.15.8',
-    'types-docutils==0.19.1.6',
-    'types-python-dateutil==2.8.19.9',
-    'types-setuptools==67.4.0.3'
+    'flake8>=5.0.4,<6.0.0'
 ]
+
+types_requirements = [
+    'boto3-stubs>=1.26.80,<2.0.0',
+    'botocore-stubs>=1.29.80,<2.0.0',
+    'mypy-boto3-logs>=1.26.53,<2.0.0',
+    'types-PyYAML>=6.0.12.8,<7.0.0',
+    'types-Pygments>=2.14.0.5,<3.0.0',
+    'types-click>=7.1.8,<8.0.0',
+    'types-colorama>=0.4.15.8,<1.0.0',
+    'types-docutils>=0.19.1.6,<1.0.0',
+    'types-python-dateutil>=2.8.19.9,<3.0.0',
+    'types-setuptools>=67.4.0.3,<68.0.0'
+]
+
 
 
 setup(
@@ -84,7 +85,8 @@ setup(
     extras_require={
         'cli': cli_requirements,
         'test': test_requirements,
-        'lint': lint_requirements
+        'lint': lint_requirements,
+        'types': types_requirements
     },
     license="MIT license",
     long_description=readme,
