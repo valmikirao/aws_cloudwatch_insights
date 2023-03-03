@@ -5,3 +5,5 @@
 **0.1.2** - Got CI/CD working
 
 **0.1.3** - Minor CI/CD improvements and README.md tweaking
+
+**0.1.4** - Fixed (unfortunately pretty major) bug with jsonifying
