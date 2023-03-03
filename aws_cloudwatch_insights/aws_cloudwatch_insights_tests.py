@@ -18,7 +18,16 @@ def test_get_insights():
     mock_logs_client.get_query_results.return_value = {
         'status': ResponseStatus.COMPLETE,
         'results': [
-            [{'field': 'foo', 'value': '{"bar":"bing"}'}]
+            [
+                {'field': 'foo', 'value': '{"bar":"bing"}'},
+                {'field': 'foo2', 'value': '{"bar":"bing", "bang": [1, 2, 3]}'},
+                {'field': 'foo3', 'value': 'scalar'}
+            ],
+            [
+                {'field': 'foo', 'value': '{"bar":"brick"}'},
+                {'field': 'foo2', 'value': '{"bar":"brack", "bang": [10, 20, 30]}'},
+                {'field': 'foo3', 'value': 'scalar2'}
+            ]
         ]
     }
 
@@ -39,9 +48,18 @@ def test_get_insights():
         group_names=group_names
     ))
 
-    assert actual_results == [{
-        'foo': {'bar': 'bing'}
-    }]
+    assert actual_results == [
+        {
+            'foo': {'bar': 'bing'},
+            'foo2': {'bar': 'bing', 'bang': [1, 2, 3]},
+            'foo3': 'scalar',
+        },
+        {
+            'foo': {'bar': 'brick'},
+            'foo2': {'bar': 'brack', 'bang': [10, 20, 30]},
+            'foo3': 'scalar2',
+        },
+    ]
     assert mock_logs_client.start_query.call_args_list == [call(
         endTime=end_time,
         limit=result_limit,

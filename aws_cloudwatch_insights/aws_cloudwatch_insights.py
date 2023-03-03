@@ -88,7 +88,7 @@ def jsonify_insights_results(results: Iterable[GenericDict]) -> Iterable[Generic
             else:
                 returned_row[key] = value
 
-            yield returned_row
+        yield returned_row
 
 
 def dictify_results(results: Iterable[Iterable[ResultFieldTypeDef]]) -> Iterable[GenericDict]:
