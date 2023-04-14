@@ -9,4 +9,4 @@ def test_print_version():
     print_version_script = os.path.join(this_dir, 'print_version.py')
     actual = subprocess.check_output(['python', print_version_script])\
         .decode().strip()
-    assert actual == __version__
+    assert actual == f"v{__version__}"
