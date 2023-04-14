@@ -1,12 +1,13 @@
-from configparser import ConfigParser
+import os
 
 
 def main():
-    cfg = ConfigParser()
-    cfg.read('setup.cfg')
-    version = cfg['bumpversion']['current_version']
-
-    print(f"v{version}")
+    content_root = os.path.dirname(os.path.dirname(__file__))
+    version_file = os.path.join(content_root, 'version.txt')
+    with open(version_file, 'r') as f:
+        version = f.read()
+    version = version.strip()
+    print(version)
 
 
 if __name__ == '__main__':
