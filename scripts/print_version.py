@@ -7,7 +7,7 @@ def main():
     with open(version_file, 'r') as f:
         version = f.read()
     version = version.strip()
-    print(version)
+    print(f"v{version}")
 
 
 if __name__ == '__main__':
