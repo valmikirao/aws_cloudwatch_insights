@@ -17,7 +17,7 @@ assert_env GITHUB_RELEASE_VERSION
 SCRIPTS_DIR="$(dirname "$0")"
 VERSION="$(python "${SCRIPTS_DIR}/print_version.py")"
 
-if [[ "$GITHUB_RELEASE_VERSION" !=  "v${VERSION}" ]]; then
+if [[ "$GITHUB_RELEASE_VERSION" !=  "$VERSION" ]]; then
     echo "\$GITHUB_RELEASE version ($GITHUB_RELEASE_VERSION) is not the same as the version referenced" >&2
     echo "in the code ($VERSION).  Exiting" >&2
     exit 2
