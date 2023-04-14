@@ -7,3 +7,5 @@
 **0.1.3** - Minor CI/CD improvements and README.md tweaking
 
 **0.1.4** - Fixed (unfortunately pretty major) bug with jsonifying
+
+**0.1.5** - Update README, Add version checking, cleanup

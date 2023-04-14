@@ -3,25 +3,12 @@
 """The setup script."""
 
 from setuptools import setup, find_packages
-from configparser import ConfigParser
 
-m2r_installed = False
-
-try:
-    import m2r
-    m2r_installed = True
-except ModuleNotFoundError as e:
-    pass
-
-with open('README.md') as readme_file:
+with open('README.md', 'r') as readme_file:
     readme = readme_file.read()
-if m2r_installed:
-    # only needed for publishing not for, say, running tests
-    readme = m2r.convert(readme)
-
-cfg = ConfigParser()
-cfg.read('setup.cfg')
-version = cfg['bumpversion']['current_version']
+with open('version.txt', 'r') as version_file:
+    version = version_file.read()
+    version = version.strip()
 
 requirements = [
     'boto3>=1.21.40,<2.0.0',
@@ -90,6 +77,7 @@ setup(
     },
     license="MIT license",
     long_description=readme,
+    long_description_content_type='text/markdown',
     include_package_data=True,
     keywords=['aws', 'cloudwatch', 'insights'],
     name='aws_cloudwatch_insights',

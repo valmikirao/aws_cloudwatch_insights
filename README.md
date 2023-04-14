@@ -135,7 +135,7 @@ class Insights:
 
 ## Development
 
-Requires make, docker, and docker-compose:
+Requires make:
 
 ```shell
 # setting up dev environment
@@ -148,9 +148,6 @@ $ pytest
 
 # run tests for all environments
 $ make test-all
-$ make test-all-build  # checks to see if images need rebuilding
-# ... you can use the underlying script to pass args to docker-compose directly:
-$ ./scripts/run_tests_all.sh --build py36-no-cli py37  # runs for python 3.7 and python 3.6 with no cli
 
 ```
 

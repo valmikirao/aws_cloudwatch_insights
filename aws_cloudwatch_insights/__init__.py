@@ -2,7 +2,7 @@
 
 __author__ = """Valmiki Rao"""
 __email__ = 'valmikirao@gmail.com'
-__version__ = '0.1.0'
+__version__ = '0.1.5'
 
 from .aws_cloudwatch_insights import Insights
 
