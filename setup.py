@@ -45,7 +45,6 @@ types_requirements = [
 ]
 
 
-
 setup(
     author="Valmiki Rao",
     author_email='valmikirao@gmail.com',

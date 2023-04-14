@@ -2,6 +2,7 @@ import os.path
 import subprocess
 from aws_cloudwatch_insights import __version__
 
+
 def test_print_version():
     """ Kind of silly, but this did break at one point"""
     this_dir = os.path.dirname(__file__)
